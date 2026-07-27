@@ -1,3 +1,4 @@
+```
 ## Goal: To sort individual reads into unique FASTQ files based on the index matched (and index status unknown or hopped) and calculate frequency of index hopping
 
 import bioinfo   #to use qual_score (which uses convert_phred) to turn each quality character into a score. Needed to compare to qual_cutoff later
@@ -51,6 +52,6 @@ output files: 52 in total
         index_read1 or index_read2 BUT ACTUALLY read 1 or read 2 (so from R1 or R4 source file) = 48 files
         hopped_R1 or hopped_R2 = 2 files
         unknown_R1 or unknown_R2 = 2 files
-
+```
 
 
