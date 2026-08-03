@@ -50,7 +50,7 @@ for pos in range(len(my_list)):
     my_list[pos] = my_list[pos] / num_records
  
  
-# write the means out to a tsv (small file, so we can re-plot later without rerunning)
+# write the means out to a tsv (small file, so can re-plot later without rerunning)
 with open(f"{outdir}/{o}_means.tsv", "w") as out:
     out.write("Position\tMean_Quality_Score\n")
     for pos in range(len(my_list)):

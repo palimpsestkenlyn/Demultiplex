@@ -20,7 +20,7 @@
 
 
     2. 
-    ```
+    
      Honestly, a per-position mean quality cutoff isn't the metric I'd actually use here, especially as it means something different for the two read types. 
 
     For the index reads, I wouldn't use per-base quality distributions like this at all. The real question for an index isn't "how good is the average quality at each position," it's "does this 8bp index unambiguously identify one known sample." A one base change in an 8 nt length index is a bigger deal that one base change in a 101. There is more data in the longer read which can help offset a single error. However the change in the index is context dependent. If the change can make turn the error index into a valid other index, this is hugely significant as data could end up in the wrong index or sample and seem valid but not be and not throw an error. However if the change just produces a non valid index, it will end up in unknown, be discarded as data, and have little impact. So Hamming distance is the better tool for comparison here and making a cutoff: because the 24 indexes are designed to be well-separated, a change is not a big deal if it will just result in the sample being tossed. Also with a short index read it will be expected that the first few bases will be lower quality calls, built into the mechanism it just is with such a short sequence so again a score based cutoff seems the wrong idea. If forced to go this route I'd set a per-base cutoff of Q28. Since the low scores at the leading positions reflect the known startup sequencing reality, the reads are likely clustered near that value rather than widely spread, so a Q28 floor removes only true outliers without discarding otherwise-usable indexes (most likely to be clustered around the average shown around Q30 for the first 2 nt). That said, per-base quality is a blunt tool for indexes anyway, Hamming distance to the 24 known indexes is the better metric.
@@ -28,7 +28,7 @@
     For the biological reads, quality-based filtering matters even less for demultiplexing specifically, because demultiplexing is about sorting by index, not about the content of the biological read. Any real quality trimming of low-scoring positions would happen at a later step, before assembly or alignment, not during demultiplexing. If I were filtering biological reads at all here, it would maybe be to save downstream effort by discarding reads that are very bad overall, and I'd base that on the mean quality of an individual read (averaging across the bases of that one read), not on the per-position means shown in these plots. For that I'd use a lenient cutoff around Q20, since downstream tools tolerate some error and I don't want to throw away usable data this early.
     
     The one thing these per-position plots would actually be useful for is a uniform end-trim: if all reads showed quality dropping off past a certain position, I could trim every read at that point. In this data the quality stays high across the full read length with only a slight dip at the very ends, so no aggressive trimming that might apply bluntly to the whole data set seems relevant here.
-    ```
+    
 
 
     3. R2 or forward read barcodes, there are 3,976,613 that contain N's. R3 or reverse read barcode file contains 3,328,051 indexes that contain N's.
